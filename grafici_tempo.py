@@ -3,6 +3,7 @@
 
 import math
 import numpy as np
+import pandas as pd
 import matplotlib
 matplotlib.use("TKAgg")
 import matplotlib.pyplot as plt
@@ -42,15 +43,41 @@ if __name__ == "__main__":
 
     RATA = calcola_rata(C, TA, PA)
     # DURATA = calcola_durata(C, TA, RATA) # calcolo inverso: durata del mutuo a partire dalla rata
-    INTERESSI = RATA*A*PA - C
+    INTERESSI_TOT = RATA * A * PA - C
     print(f"Capitale: {C:.0f} Euro\n"
           f"Anni: {A:.0f}\n"
           f"Tasso: {TA*100:.2f} %\n"
           f"Rata mensile: {RATA:.2f} Euro\n"
-          f"Interessi: {INTERESSI:.2f} Euro")
+          f"Interessi totali: {INTERESSI_TOT:.2f} Euro")
+
+
+    # Calcoli per mese
+    mese, montante_mese = calcola_montante(C, TA, RATA, 12*A) # AKA debito residuo
+    r = TA/PA
+    rata_mese = np.r_[0, RATA*np.ones(A*PA)]
+    quota_interessi_mese = np.r_[0, r * montante_mese[0:-1]]
+    quota_capitale_mese = rata_mese - np.r_[0, r * montante_mese[0:-1]]
+
+    df_mutuo = pd.DataFrame({"mese": mese,
+                             "quota_capitale": quota_capitale_mese,
+                             "quota_interessi": quota_interessi_mese,
+                             "debito_residuo": montante_mese})
+    df_mutuo["anno"] = df_mutuo["mese"]/12
 
     # Grafici
-    mese, montante_mese = calcola_montante(C, TA, RATA, 12*A)
-    plt.plot(mese/12.0, montante_mese)
+    plt.figure(figsize=(12, 6))
+    plt.plot(df_mutuo["anno"], df_mutuo["debito_residuo"], "k", label="Debito residuo")
+    plt.plot(df_mutuo["anno"], np.cumsum(df_mutuo["quota_capitale"]), "b", label="Quota capitale cumulata")
+    plt.plot(df_mutuo["anno"], np.cumsum(df_mutuo["quota_interessi"]), "m", label="Quota interesse cumulata")
+    plt.legend()
+    plt.grid()
+
     plt.xlabel("Tempo (anni)")
     plt.ylabel("Montante (Euro)")
+
+    plt.figure(figsize=(12, 6))
+    plt.plot(df_mutuo["anno"], df_mutuo["quota_capitale"] + df_mutuo["quota_interessi"], "k", label="Rata")
+    plt.plot(df_mutuo["anno"], df_mutuo["quota_capitale"], "b", label="Quota capitale")
+    plt.plot(df_mutuo["anno"], df_mutuo["quota_interessi"], "m", label="Quota interesse")
+    plt.legend()
+    plt.grid()
