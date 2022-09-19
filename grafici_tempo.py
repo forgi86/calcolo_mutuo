@@ -81,3 +81,5 @@ if __name__ == "__main__":
     plt.plot(df_mutuo["anno"], df_mutuo["quota_interessi"], "m", label="Quota interesse")
     plt.legend()
     plt.grid()
+
+    df_mutuo.to_excel("mutuo.xlsx")
