@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     # Dati
     C = 90_000  # capitale
-    TA = 2.7 / 100  # tasso
+    TA = 3.1 / 100  # tasso
     PA = 12  # mesi per anno
     A = 10  # anni
 
