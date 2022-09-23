@@ -33,18 +33,6 @@ def calcola_montante(capitale, tasso_annuo, rata, periodi, periodi_anno=12):
     return t, Mt
 
 
-def sim_mortgage(cap, rate, inst, periods):
-    t = np.arange(periods+1)
-    cap_res_vec = np.zeros(periods+1)
-    cap_res_vec[0] = cap
-    int_vec = np.zeros(periods + 1)
-    for idx in range(1, periods+1):
-        int_vec[idx] = cap_res_vec[idx-1]*rate
-        cap_res_vec[idx] = cap_res_vec[idx-1] + int_vec[idx] - inst
-    cap_vec = r - int_vec
-    return t, cap_vec, int_vec, cap_res_vec
-
-
 if __name__ == "__main__":
 
     # Dati
@@ -71,12 +59,10 @@ if __name__ == "__main__":
     quota_capitale_mese = rata_mese - np.r_[0, r * montante_mese[0:-1]]
 
     df_mutuo = pd.DataFrame({"mese": mese,
-                             "rata": rata_mese,
                              "quota_capitale": quota_capitale_mese,
                              "quota_interessi": quota_interessi_mese,
                              "debito_residuo": montante_mese})
     df_mutuo["anno"] = df_mutuo["mese"]/12
-    df_mutuo.set_index("mese")
 
     # Grafici
     plt.figure(figsize=(12, 6))
@@ -97,5 +83,3 @@ if __name__ == "__main__":
     plt.grid()
 
     df_mutuo.to_excel("mutuo.xlsx")
-
-    t, cap_vec, int_vec, cap_res_vec = sim_mortgage(C, TA/PA, RATA, A*PA)
