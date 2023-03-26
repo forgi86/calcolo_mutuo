@@ -9,9 +9,9 @@ matplotlib.use("TKAgg")
 import matplotlib.pyplot as plt
 
 
-def calcola_rata(capitale, tasso_annuo, periodi_anno=12):
+def calcola_rata(capitale, tasso_annuo, anni, periodi_anno=12):
     r = tasso_annuo / periodi_anno  # rata mensile effettiva
-    n = periodi_anno * A  # numero di periodi
+    n = periodi_anno * anni  # numero di periodi
     rata = capitale * r * (1 + r) ** n / ((1 + r) ** n - 1)
     return rata
 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     PA = 12  # mesi per anno
     A = 10  # anni
 
-    RATA = calcola_rata(C, TA, PA)
+    RATA = calcola_rata(C, TA, A, PA)
     # DURATA = calcola_durata(C, TA, RATA) # calcolo inverso: durata del mutuo a partire dalla rata
     INTERESSI_TOT = RATA * A * PA - C
     print(f"Capitale: {C:.0f} Euro\n"

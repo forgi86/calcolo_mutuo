@@ -6,5 +6,5 @@ TA = 3.0 / 100  # tasso
 PA = 12  # mesi per anno
 A = 10  # anni
 
-RATA = C*(1+TA/PA)**(PA*A) * TA/PA /((1+TA/PA)**(PA*A)-1)
+RATA = C*(1+TA/PA)**(PA*A) * TA/PA / ((1+TA/PA)**(PA*A)-1)
 
